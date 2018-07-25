@@ -30,7 +30,6 @@ describe('AnvilModal', () => {
     const anvil = new Anvil();
     anvil.register('modal', AnvilModal);
 
-    console.log(document.getElementById('modal-button'));
     const button: HTMLButtonElement = document.querySelector(
       '[data-modal="button"]'
     );
