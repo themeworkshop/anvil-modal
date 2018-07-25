@@ -57,3 +57,11 @@ typings/
 # dotenv environment variables file
 .env
 
+# JetBrains IDEs
+.idea
+
+# Output
+dist
+
+# Rollup
+.rpt2_cache/
