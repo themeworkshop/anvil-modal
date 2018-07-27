@@ -3,16 +3,14 @@ import AnvilModal from './anvil-modal';
 
 const html = `
 <body>
-  <div data-component="modal">
-    <button id="modal-button" data-modal="open-button" aria-controls="modal-content">Open</button>
-    <section id="modal-content" hidden data-modal="content" aria-labelledby="modal-title">
-      <h1 id="modal-title">This is a modal window</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
-        ipsa ducimus a molestias cum, harum veritatis ea illum debitis
-        aliquid obcaecati eligendi voluptates distinctio ratione delectus,
-        iste voluptate, eos odit.</p>
-        <button data-modal="close-button" data-controls="modal-content">Close</button>
-    </section>
+  <button id="modal-button" data-component="modal" aria-controls="modal-content">Open</button>
+  <div id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title">
+    <h1 id="modal-title">This is a modal window</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
+      ipsa ducimus a molestias cum, harum veritatis ea illum debitis
+      aliquid obcaecati eligendi voluptates distinctio ratione delectus,
+      iste voluptate, eos odit.</p>
+      <button data-modal="close-button" data-controls="modal-content">Close</button>
   </div>
 </body>
 `;
@@ -32,19 +30,17 @@ describe('AnvilModal', () => {
     anvil.register('modal', AnvilModal);
 
     const openButton: HTMLButtonElement = document.querySelector(
-      '[data-modal="open-button"]'
+      '[data-component="modal"]'
     );
     openButton.click();
 
-    const content: HTMLElement = document.querySelector(
-      '[data-modal="content"]'
-    );
+    const dialog: HTMLElement = document.querySelector('[data-modal="dialog"]');
 
     const overlay: HTMLElement = document.querySelector(
-      '[data-modal="content"]'
+      '[data-modal="dialog"]'
     );
 
-    expect(content.hidden).toBe(false);
+    expect(dialog.hidden).toBe(false);
     expect(overlay.hidden).toBe(false);
   });
 
@@ -53,7 +49,7 @@ describe('AnvilModal', () => {
     anvil.register('modal', AnvilModal);
 
     const openButton: HTMLButtonElement = document.querySelector(
-      '[data-modal="open-button"]'
+      '[data-component="modal"]'
     );
     openButton.click();
 
@@ -74,7 +70,7 @@ describe('AnvilModal', () => {
     anvil.register('modal', AnvilModal);
 
     const openButton: HTMLButtonElement = document.querySelector(
-      '[data-modal="open-button"]'
+      '[data-component="modal"]'
     );
     openButton.click();
 

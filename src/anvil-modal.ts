@@ -1,19 +1,18 @@
 class AnvilModal implements AnvilModal {
   id: number;
-  root: Element;
   openButton: HTMLButtonElement;
   closeButton: HTMLButtonElement;
-  content: HTMLElement;
-  modalCreated: boolean;
+  dialog: HTMLElement;
+  modalOpened: boolean;
   overlay: HTMLElement;
 
   constructor(index: number, element: Element) {
-    this.root = element;
     this.id = index;
-    this.openButton = this.root.querySelector('[data-modal="open-button"]');
-    this.closeButton = this.root.querySelector('[data-modal="close-button"]');
-    this.content = this.root.querySelector('[data-modal="content"]');
-    this.modalCreated = false;
+    this.openButton = element as HTMLButtonElement;
+    const dialogId = this.openButton.getAttribute('aria-controls');
+    this.dialog = document.getElementById(dialogId);
+    this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
+    this.modalOpened = false;
     this.load();
   }
 
@@ -27,13 +26,13 @@ class AnvilModal implements AnvilModal {
     this.overlay.setAttribute('id', `modal-overlay-${this.id}`);
     this.overlay.setAttribute('data-modal', 'overlay');
     document.body.appendChild(this.overlay);
-    document.body.appendChild(this.content);
-    this.content.hidden = false;
-    this.modalCreated = true;
+    document.body.appendChild(this.dialog);
+    this.dialog.hidden = false;
+    this.modalOpened = true;
   }
 
   openModal() {
-    if (!this.modalCreated) {
+    if (!this.modalOpened) {
       this.createModal();
     } else {
       this.overlay.hidden = false;
