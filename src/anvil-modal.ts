@@ -1,8 +1,9 @@
-class AnvilModal implements AnvilModal {
+class AnvilModal {
   id: number;
   openButton: HTMLButtonElement;
   closeButton: HTMLButtonElement;
   dialog: HTMLElement;
+  dialogTitle: HTMLElement;
   modalOpened: boolean;
   overlay: HTMLElement;
 
@@ -11,6 +12,7 @@ class AnvilModal implements AnvilModal {
     this.openButton = element as HTMLButtonElement;
     const dialogId = this.openButton.getAttribute('aria-controls');
     this.dialog = document.getElementById(dialogId);
+    this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');
     this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
     this.modalOpened = false;
     this.load();
@@ -37,10 +39,14 @@ class AnvilModal implements AnvilModal {
     } else {
       this.overlay.hidden = false;
     }
+    this.dialogTitle.tabIndex = 0;
+    this.dialogTitle.focus();
+    this.dialogTitle.tabIndex = -1;
   }
 
   closeModal() {
     this.overlay.hidden = true;
+    this.openButton.focus();
   }
 }
 

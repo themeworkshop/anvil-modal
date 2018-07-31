@@ -4,8 +4,8 @@ import AnvilModal from './anvil-modal';
 const html = `
 <body>
   <button id="modal-button" data-component="modal" aria-controls="modal-content">Open</button>
-  <div id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title">
-    <h1 id="modal-title">This is a modal window</h1>
+  <div role="dialog" id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title">
+    <h1 id="modal-title" data-modal="title">This is a modal window</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
       ipsa ducimus a molestias cum, harum veritatis ea illum debitis
       aliquid obcaecati eligendi voluptates distinctio ratione delectus,
@@ -86,5 +86,40 @@ describe('AnvilModal', () => {
     openButton.click();
 
     expect(overlay.hidden).toBe(false);
+  });
+
+  it('puts the title in focus when opened', () => {
+    const anvil = new Anvil();
+    anvil.register('modal', AnvilModal);
+
+    const title = document.querySelector('[data-modal="title"]');
+    const openButton: HTMLButtonElement = document.querySelector(
+      '[data-component="modal"]'
+    );
+
+    openButton.click();
+
+    expect(document.activeElement).toBe(title);
+  });
+
+  it('puts the open button back in focus when the modal closes', () => {
+    const anvil = new Anvil();
+    anvil.register('modal', AnvilModal);
+
+    const openButton: HTMLButtonElement = document.querySelector(
+      '[data-component="modal"]'
+    );
+    openButton.click();
+
+    const closeButton: HTMLButtonElement = document.querySelector(
+      '[data-modal="close-button"]'
+    );
+    closeButton.click();
+
+    const overlay: HTMLElement = document.querySelector(
+      '[data-modal="overlay"]'
+    );
+
+    expect(document.activeElement).toBe(openButton);
   });
 });
