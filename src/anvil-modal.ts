@@ -6,6 +6,7 @@ class AnvilModal {
   dialogTitle: HTMLElement;
   modalOpened: boolean;
   overlay: HTMLElement;
+  interactiveElements: HTMLElement[];
 
   constructor(index: number, element: Element) {
     this.id = index;
@@ -14,6 +15,11 @@ class AnvilModal {
     this.dialog = document.getElementById(dialogId);
     this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');
     this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
+    this.interactiveElements = [].slice.call(
+      this.dialog.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+      )
+    );
     this.modalOpened = false;
     this.load();
   }
@@ -21,6 +27,11 @@ class AnvilModal {
   load() {
     this.openButton.addEventListener('click', () => this.openModal());
     this.closeButton.addEventListener('click', () => this.closeModal());
+    this.interactiveElements.forEach(el =>
+      el.addEventListener('keypress', () =>
+        this.handleTabbing(event as KeyboardEvent)
+      )
+    );
   }
 
   createModal() {
@@ -47,6 +58,36 @@ class AnvilModal {
   closeModal() {
     this.overlay.hidden = true;
     this.openButton.focus();
+  }
+
+  handleTabbing(event: KeyboardEvent) {
+    // Exit if it's not a tab
+    if (event.keyCode !== 9) {
+      return;
+    }
+
+    // Get the index of the element that triggered
+    const targetIndex = this.interactiveElements.indexOf(
+      event.target as HTMLElement
+    );
+    const nextTarget = this.interactiveElements[targetIndex + 1];
+    const prevTarget = this.interactiveElements[targetIndex - 1];
+
+    if (!event.shiftKey && nextTarget) {
+      nextTarget.focus();
+    }
+
+    if (!event.shiftKey && nextTarget) {
+      this.interactiveElements[0].focus();
+    }
+
+    if (event.shiftKey && prevTarget) {
+      prevTarget.focus();
+    }
+
+    if (event.shiftKey && !prevTarget) {
+      this.interactiveElements.reverse()[0].focus();
+    }
   }
 }
 
