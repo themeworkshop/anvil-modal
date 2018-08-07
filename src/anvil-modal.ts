@@ -27,8 +27,11 @@ class AnvilModal {
   load() {
     this.openButton.addEventListener('click', () => this.openModal());
     this.closeButton.addEventListener('click', () => this.closeModal());
+    this.dialog.addEventListener('keydown', event =>
+      this.handleEscape(event as KeyboardEvent)
+    );
     this.interactiveElements.forEach(el =>
-      el.addEventListener('keypress', () =>
+      el.addEventListener('keydown', event =>
         this.handleTabbing(event as KeyboardEvent)
       )
     );
@@ -38,8 +41,10 @@ class AnvilModal {
     this.overlay = document.createElement('div');
     this.overlay.setAttribute('id', `modal-overlay-${this.id}`);
     this.overlay.setAttribute('data-modal', 'overlay');
+    this.overlay.classList.add('modal__overlay');
     document.body.appendChild(this.overlay);
-    document.body.appendChild(this.dialog);
+    this.overlay.appendChild(this.dialog);
+    this.overlay.addEventListener('click', () => this.closeModal());
     this.dialog.hidden = false;
     this.modalOpened = true;
   }
@@ -66,28 +71,30 @@ class AnvilModal {
       return;
     }
 
-    // Get the index of the element that triggered
-    const targetIndex = this.interactiveElements.indexOf(
+    const currentEl = this.interactiveElements.indexOf(
       event.target as HTMLElement
     );
-    const nextTarget = this.interactiveElements[targetIndex + 1];
-    const prevTarget = this.interactiveElements[targetIndex - 1];
 
-    if (!event.shiftKey && nextTarget) {
-      nextTarget.focus();
-    }
-
-    if (!event.shiftKey && nextTarget) {
+    if (!event.shiftKey && !this.interactiveElements[currentEl + 1]) {
+      event.preventDefault();
       this.interactiveElements[0].focus();
+      return;
     }
 
-    if (event.shiftKey && prevTarget) {
-      prevTarget.focus();
+    if (event.shiftKey && !this.interactiveElements[currentEl - 1]) {
+      event.preventDefault();
+      this.interactiveElements[this.interactiveElements.length - 1].focus();
+      return;
+    }
+  }
+
+  handleEscape(event: KeyboardEvent) {
+    if (event.keyCode !== 27) {
+      return;
     }
 
-    if (event.shiftKey && !prevTarget) {
-      this.interactiveElements.reverse()[0].focus();
-    }
+    event.preventDefault();
+    this.closeModal();
   }
 }
 

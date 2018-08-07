@@ -16,8 +16,8 @@ const configs = [
       typescript({
         clean: true,
         target: 'es5'
-      }),
-      terser()
+      })
+      // terser()
     ]
   },
   {
@@ -32,8 +32,8 @@ const configs = [
             target: 'ES2015'
           }
         }
-      }),
-      terser()
+      })
+      // terser()
     ]
   }
 ];
@@ -50,7 +50,8 @@ configs.forEach(config =>
       bundle.write({
         name: config.name,
         file: `dist/${config.fileName}${config.fileExt}`,
-        format: config.format
+        format: config.format,
+        sourcemap: true
       })
     )
     .catch(err => console.log(err))
