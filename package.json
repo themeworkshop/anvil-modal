@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A modal component for Anvil",
   "main": "dist/anvil-modal",
+  "types": "dist/anvil-modal.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@themeworkshop/anvil": "^0.4.0",
