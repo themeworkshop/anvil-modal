@@ -33,14 +33,10 @@ describe('AnvilModal', () => {
 
     const openButton = document.getElementById('open-button');
     const dialog: HTMLElement = document.querySelector('[data-modal="dialog"]');
-    const overlay: HTMLElement = document.querySelector(
-      '[data-modal="dialog"]'
-    );
 
     openButton.click();
 
     expect(dialog.hidden).toBe(false);
-    expect(overlay.hidden).toBe(false);
   });
 
   it('closes when the close button is clicked', () => {
@@ -140,4 +136,6 @@ describe('AnvilModal', () => {
     dialog.dispatchEvent(kbEvent);
     expect(escHandler).toBeCalled();
   });
+
+  // TODO: Add more tests to cover events that are difficult to simulate
 });

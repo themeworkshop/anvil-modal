@@ -44,7 +44,9 @@ class AnvilModal {
     this.overlay.classList.add('modal-overlay');
     document.body.appendChild(this.overlay);
     this.overlay.appendChild(this.dialog);
-    this.overlay.addEventListener('click', () => this.closeModalViaOverlay());
+    this.overlay.addEventListener('click', event =>
+      this.closeModalViaOverlay(event)
+    );
     this.dialog.hidden = false;
     this.modalOpened = true;
   }
@@ -67,7 +69,7 @@ class AnvilModal {
     document.body.classList.remove('modal-open');
   }
 
-  closeModalViaOverlay() {
+  closeModalViaOverlay(event: MouseEvent) {
     if (event.target !== event.currentTarget) {
       return;
     }
