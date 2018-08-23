@@ -14,12 +14,12 @@ class AnvilModal {
     const dialogId = this.openButton.getAttribute('aria-controls');
     this.dialog = document.getElementById(dialogId);
     this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');
-    this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
     this.interactiveElements = [].slice.call(
       this.dialog.querySelectorAll(
         'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
       )
     );
+    this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
     this.modalOpened = false;
     this.load();
   }
@@ -41,10 +41,10 @@ class AnvilModal {
     this.overlay = document.createElement('div');
     this.overlay.setAttribute('id', `modal-overlay-${this.id}`);
     this.overlay.setAttribute('data-modal', 'overlay');
-    this.overlay.classList.add('modal__overlay');
+    this.overlay.classList.add('modal-overlay');
     document.body.appendChild(this.overlay);
     this.overlay.appendChild(this.dialog);
-    this.overlay.addEventListener('click', () => this.closeModal());
+    this.overlay.addEventListener('click', () => this.closeModalViaOverlay());
     this.dialog.hidden = false;
     this.modalOpened = true;
   }
@@ -58,15 +58,24 @@ class AnvilModal {
     this.dialogTitle.tabIndex = 0;
     this.dialogTitle.focus();
     this.dialogTitle.tabIndex = -1;
+    document.body.classList.add('modal-open');
   }
 
   closeModal() {
     this.overlay.hidden = true;
     this.openButton.focus();
+    document.body.classList.remove('modal-open');
+  }
+
+  closeModalViaOverlay() {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
+    this.closeModal();
   }
 
   handleTabbing(event: KeyboardEvent) {
-    // Exit if it's not a tab
     if (event.keyCode !== 9) {
       return;
     }

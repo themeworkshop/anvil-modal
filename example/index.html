@@ -1,0 +1,78 @@
+<html lang="en">
+
+<head>
+  <script src="../dist/anvil.js"></script>
+  <script src="../dist/anvil-modal.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = new Anvil();
+      app.register('modal', AnvilModal);
+      console.log(app);
+    });
+  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 1em;
+    }
+
+    *:focus {
+      outline: 3px solid goldenrod;
+    }
+
+    .modal__overlay {
+      background: rgba(0, 0, 0, 0.5);
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+
+    body.modal-open {
+      position: fixed;
+      max-height: 100vh;
+    }
+
+    .modal {
+      background: white;
+      padding: 1.5em;
+      margin: 1em;
+      max-width: 500px;
+      max-height: 100%;
+      max-height: 50vh;
+      z-index: 110;
+    }
+
+    .modal__title {
+      margin: 0;
+    }
+
+    [hidden] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <button id="open-button" data-component="modal" aria-controls="modal-content">Open</button>
+    <div role="dialog" id="modal-dialog" hidden data-modal="dialog" aria-labelledby="modal-title" class="modal">
+      <h1 id="modal-title" data-modal="title" class="modal__title">This is a modal window</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam ipsa ducimus a molestias cum, harum veritatis
+        ea illum debitis aliquid obcaecati eligendi voluptates distinctio ratione delectus, iste voluptate, eos odit.
+      </p>
+      <input id="text-field" type="text" name="name" />
+      <input id="email-field" type="email" name="email" />
+      <button id="close-button" data-modal="close-button" data-controls="modal-content">Close</button>
+    </div>
+  </div>
+  <div style="display: block; height: 200vh; background: black; width: 20px;"></div>
+</body>
+
+</html>
