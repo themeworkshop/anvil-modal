@@ -3,12 +3,14 @@
   "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
     "module": "es2015",
+    "moduleResolution": "Node",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "target": "es2015",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "traceResolution": true
   }
 }

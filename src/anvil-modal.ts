@@ -1,3 +1,5 @@
+import { ComponentConfig } from '@themeworkshop/anvil';
+
 class AnvilModal {
   id: number;
   openButton: HTMLButtonElement;
@@ -8,9 +10,9 @@ class AnvilModal {
   overlay: HTMLElement;
   interactiveElements: HTMLElement[];
 
-  constructor(index: number, element: Element) {
-    this.id = index;
-    this.openButton = element as HTMLButtonElement;
+  constructor(config: ComponentConfig) {
+    this.id = config.index;
+    this.openButton = config.element as HTMLButtonElement;
     const dialogId = this.openButton.getAttribute('aria-controls');
     this.dialog = document.getElementById(dialogId);
     this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');

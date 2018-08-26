@@ -29,7 +29,10 @@ describe('AnvilModal', () => {
 
   it('opens when the open button is clicked', () => {
     const anvil = new Anvil();
-    anvil.register('modal', AnvilModal);
+    anvil.register({
+      selector: 'modal',
+      constructor: AnvilModal
+    });
 
     const openButton = document.getElementById('open-button');
     const dialog: HTMLElement = document.querySelector('[data-modal="dialog"]');
@@ -41,7 +44,10 @@ describe('AnvilModal', () => {
 
   it('closes when the close button is clicked', () => {
     const anvil = new Anvil();
-    anvil.register('modal', AnvilModal);
+    anvil.register({
+      selector: 'modal',
+      constructor: AnvilModal
+    });
 
     const openButton = document.getElementById('open-button');
     const closeButton = document.getElementById('close-button');
@@ -57,7 +63,10 @@ describe('AnvilModal', () => {
 
   it('opens when it has been closed and is re-opened', () => {
     const anvil = new Anvil();
-    anvil.register('modal', AnvilModal);
+    anvil.register({
+      selector: 'modal',
+      constructor: AnvilModal
+    });
 
     const openButton = document.getElementById('open-button');
     const closeButton = document.getElementById('close-button');
@@ -75,7 +84,10 @@ describe('AnvilModal', () => {
 
   it('puts the title in focus when opened', () => {
     const anvil = new Anvil();
-    anvil.register('modal', AnvilModal);
+    anvil.register({
+      selector: 'modal',
+      constructor: AnvilModal
+    });
 
     const title = document.querySelector('[data-modal="title"]');
     const openButton = document.getElementById('open-button');
@@ -85,7 +97,10 @@ describe('AnvilModal', () => {
 
   it('puts the open button back in focus when the modal closes', () => {
     const anvil = new Anvil();
-    anvil.register('modal', AnvilModal);
+    anvil.register({
+      selector: 'modal',
+      constructor: AnvilModal
+    });
 
     const openButton = document.getElementById('open-button');
     openButton.click();
@@ -95,11 +110,11 @@ describe('AnvilModal', () => {
 
   it('handles tab key events', () => {
     const anvil = new Anvil();
-    const modal = new AnvilModal(
-      0,
-      document.querySelector('[data-component="modal"]')
-    );
-    anvil.register('modal', AnvilModal);
+    const modal = new AnvilModal({
+      index: 0,
+      element: document.querySelector('[data-component="modal"]')
+    });
+    anvil.register({ selector: 'modal', constructor: AnvilModal });
 
     const tabHandler = jest.spyOn(modal, 'handleTabbing');
     const openButton = document.getElementById('open-button');
@@ -117,11 +132,11 @@ describe('AnvilModal', () => {
 
   it('handles esc key events', () => {
     const anvil = new Anvil();
-    const modal = new AnvilModal(
-      0,
-      document.querySelector('[data-component="modal"]')
-    );
-    anvil.register('modal', AnvilModal);
+    const modal = new AnvilModal({
+      index: 0,
+      element: document.querySelector('[data-component="modal"]')
+    });
+    anvil.register({ selector: 'modal', constructor: AnvilModal });
 
     const escHandler = jest.spyOn(modal, 'handleEscape');
     const openButton = document.getElementById('open-button');
