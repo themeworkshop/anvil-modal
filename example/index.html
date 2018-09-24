@@ -6,7 +6,13 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const app = new Anvil();
-      app.register('modal', AnvilModal);
+      app.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle'
+        }
+      });
       console.log(app);
     });
   </script>
@@ -62,9 +68,10 @@
 <body>
   <div>
     <button id="open-button" data-component="modal" aria-controls="modal-content">Open</button>
-    <div role="dialog" id="modal-dialog" hidden data-modal="dialog" aria-labelledby="modal-title" class="modal">
+    <div role="dialog" id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title" class="modal">
       <h1 id="modal-title" data-modal="title" class="modal__title">This is a modal window</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam ipsa ducimus a molestias cum, harum veritatis
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam ipsa ducimus a molestias cum, harum
+        veritatis
         ea illum debitis aliquid obcaecati eligendi voluptates distinctio ratione delectus, iste voluptate, eos odit.
       </p>
       <input id="text-field" type="text" name="name" />
@@ -72,7 +79,6 @@
       <button id="close-button" data-modal="close-button" data-controls="modal-content">Close</button>
     </div>
   </div>
-  <div style="display: block; height: 200vh; background: black; width: 20px;"></div>
 </body>
 
 </html>

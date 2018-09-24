@@ -1,7 +1,7 @@
 import Anvil from '@themeworkshop/anvil';
 import AnvilModal from './anvil-modal';
 
-const html = `
+const standardHTML = `
 <body>
   <button id="open-button" data-component="modal" aria-controls="modal-content">Open</button>
   <div role="dialog" id="modal-content" data-modal="dialog" aria-labelledby="modal-title">
@@ -17,140 +17,207 @@ const html = `
 </body>
 `;
 
-describe('AnvilModal', () => {
-  beforeEach(() => {
-    document.write(html);
-  });
+const toggleHTML = `
+<body>
+  <button id="toggle-button" data-component="modal" aria-controls="modal-content">Open</button>
+  <div role="dialog" id="modal-content" data-modal="dialog" aria-labelledby="modal-title">
+    <h1 id="modal-title" data-modal="title">This is a modal window</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
+      ipsa ducimus a molestias cum, harum veritatis ea illum debitis
+      aliquid obcaecati eligendi voluptates distinctio ratione delectus,
+      iste voluptate, eos odit.</p>
+      <input id="text-field" type="text" name="name" />
+      <input id="email-field" type="email" name="email" />
+      <button id="close-button" data-modal="close-button" data-controls="modal-content">Close</button>
+  </div>
+</body>
+`;
 
+describe('AnvilModal', () => {
   it('loads correctly', () => {
     const anvil = new Anvil();
     expect(anvil).toHaveProperty('components');
   });
 
-  it('opens when the open button is clicked', () => {
-    const anvil = new Anvil();
-    anvil.register({
-      selector: 'modal',
-      constructor: AnvilModal
+  describe('When the button mode is default', () => {
+    beforeEach(() => {
+      document.write(standardHTML);
     });
 
-    const openButton = document.getElementById('open-button');
-    const dialog: HTMLElement = document.querySelector('[data-modal="dialog"]');
+    it('opens when the open button is clicked', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal
+      });
 
-    openButton.click();
+      const openButton = document.getElementById('open-button');
+      const dialog: HTMLElement = document.querySelector(
+        '[data-modal="dialog"]'
+      );
 
-    expect(dialog.hidden).toBe(false);
-  });
+      openButton.click();
 
-  it('closes when the close button is clicked', () => {
-    const anvil = new Anvil();
-    anvil.register({
-      selector: 'modal',
-      constructor: AnvilModal
+      expect(dialog.hidden).toBe(false);
     });
 
-    const openButton = document.getElementById('open-button');
-    const closeButton = document.getElementById('close-button');
-    openButton.click();
-    closeButton.click();
+    it('closes when the close button is clicked', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal
+      });
 
-    const overlay: HTMLElement = document.querySelector(
-      '[data-modal="overlay"]'
-    );
+      const openButton = document.getElementById('open-button');
+      const closeButton = document.getElementById('close-button');
+      openButton.click();
+      closeButton.click();
 
-    expect(overlay.hidden).toBe(true);
-  });
+      const overlay: HTMLElement = document.querySelector(
+        '[data-modal="overlay"]'
+      );
 
-  it('opens when it has been closed and is re-opened', () => {
-    const anvil = new Anvil();
-    anvil.register({
-      selector: 'modal',
-      constructor: AnvilModal
+      expect(overlay.hidden).toBe(true);
     });
 
-    const openButton = document.getElementById('open-button');
-    const closeButton = document.getElementById('close-button');
+    it('opens when it has been closed and is re-opened', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal
+      });
 
-    openButton.click();
-    closeButton.click();
-    openButton.click();
+      const openButton = document.getElementById('open-button');
+      const closeButton = document.getElementById('close-button');
 
-    const overlay: HTMLElement = document.querySelector(
-      '[data-modal="overlay"]'
-    );
+      openButton.click();
+      closeButton.click();
+      openButton.click();
 
-    expect(overlay.hidden).toBe(false);
-  });
+      const overlay: HTMLElement = document.querySelector(
+        '[data-modal="overlay"]'
+      );
 
-  it('puts the title in focus when opened', () => {
-    const anvil = new Anvil();
-    anvil.register({
-      selector: 'modal',
-      constructor: AnvilModal
+      expect(overlay.hidden).toBe(false);
     });
 
-    const title = document.querySelector('[data-modal="title"]');
-    const openButton = document.getElementById('open-button');
-    openButton.click();
-    expect(document.activeElement).toBe(title);
-  });
+    it('puts the title in focus when opened', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal
+      });
 
-  it('puts the open button back in focus when the modal closes', () => {
-    const anvil = new Anvil();
-    anvil.register({
-      selector: 'modal',
-      constructor: AnvilModal
+      const title = document.querySelector('[data-modal="title"]');
+      const openButton = document.getElementById('open-button');
+      openButton.click();
+      expect(document.activeElement).toBe(title);
     });
 
-    const openButton = document.getElementById('open-button');
-    openButton.click();
-    document.getElementById('close-button').click();
-    expect(document.activeElement).toBe(openButton);
-  });
+    it('puts the open button back in focus when the modal closes', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal
+      });
 
-  it('handles tab key events', () => {
-    const anvil = new Anvil();
-    const modal = new AnvilModal({
-      index: 0,
-      element: document.querySelector('[data-component="modal"]')
+      const openButton = document.getElementById('open-button');
+      openButton.click();
+      document.getElementById('close-button').click();
+      expect(document.activeElement).toBe(openButton);
     });
-    anvil.register({ selector: 'modal', constructor: AnvilModal });
 
-    const tabHandler = jest.spyOn(modal, 'handleTabbing');
-    const openButton = document.getElementById('open-button');
-    const closeButton = document.getElementById('close-button');
+    it('handles tab key events', () => {
+      const anvil = new Anvil();
+      const modal = new AnvilModal({
+        index: 0,
+        element: document.querySelector('[data-component="modal"]')
+      });
+      anvil.register({ selector: 'modal', constructor: AnvilModal });
 
-    // open the modal
-    openButton.click();
-    closeButton.focus();
+      const tabHandler = jest.spyOn(modal, 'handleTabbing');
+      const openButton = document.getElementById('open-button');
+      const closeButton = document.getElementById('close-button');
 
-    // keyboard event
-    const kbEvent = new KeyboardEvent('keydown', { code: '9' });
-    closeButton.dispatchEvent(kbEvent);
-    expect(tabHandler).toBeCalled();
-  });
+      // open the modal
+      openButton.click();
+      closeButton.focus();
 
-  it('handles esc key events', () => {
-    const anvil = new Anvil();
-    const modal = new AnvilModal({
-      index: 0,
-      element: document.querySelector('[data-component="modal"]')
+      // keyboard event
+      const kbEvent = new KeyboardEvent('keydown', { code: '9' });
+      closeButton.dispatchEvent(kbEvent);
+      expect(tabHandler).toBeCalled();
     });
-    anvil.register({ selector: 'modal', constructor: AnvilModal });
 
-    const escHandler = jest.spyOn(modal, 'handleEscape');
-    const openButton = document.getElementById('open-button');
-    const dialog: HTMLElement = document.querySelector('[data-modal="dialog"]');
+    it('handles esc key events', () => {
+      const anvil = new Anvil();
+      const modal = new AnvilModal({
+        index: 0,
+        element: document.querySelector('[data-component="modal"]')
+      });
+      anvil.register({ selector: 'modal', constructor: AnvilModal });
 
-    // open the modal
-    openButton.click();
-    dialog.focus();
+      const escHandler = jest.spyOn(modal, 'handleEscape');
+      const openButton = document.getElementById('open-button');
+      const dialog: HTMLElement = document.querySelector(
+        '[data-modal="dialog"]'
+      );
 
-    // keyboard event
-    const kbEvent = new KeyboardEvent('keydown', { code: '27' });
-    dialog.dispatchEvent(kbEvent);
-    expect(escHandler).toBeCalled();
+      // open the modal
+      openButton.click();
+      dialog.focus();
+
+      // keyboard event
+      const kbEvent = new KeyboardEvent('keydown', { code: '27' });
+      dialog.dispatchEvent(kbEvent);
+      expect(escHandler).toBeCalled();
+    });
+    // TODO: Add more tests to cover events that are difficult to simulate
   });
 
-  // TODO: Add more tests to cover events that are difficult to simulate
+  describe('When the button mode is toggle', () => {
+    beforeEach(() => {
+      document.write(toggleHTML);
+    });
+
+    it('the toggle button will open the modal', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle'
+        }
+      });
+
+      const toggleButton = document.getElementById('toggle-button');
+      const dialog: HTMLElement = document.querySelector(
+        '[data-modal="dialog"]'
+      );
+
+      toggleButton.click();
+
+      expect(dialog.hidden).toBe(false);
+    });
+
+    it('the toggle button will open and close the modal', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle'
+        }
+      });
+
+      const toggleButton = document.getElementById('toggle-button');
+      toggleButton.click();
+
+      const overlay: HTMLElement = document.querySelector(
+        '[data-modal="overlay"]'
+      );
+      toggleButton.click();
+      expect(overlay.hidden).toBe(true);
+    });
+  });
 });

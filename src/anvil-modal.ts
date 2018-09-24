@@ -1,19 +1,31 @@
-import { ComponentConfig } from '@themeworkshop/anvil';
+export interface ComponentConfig {
+  index: number;
+  element: Element;
+  options?: {
+    buttonMode: string;
+  };
+}
 
 class AnvilModal {
   id: number;
-  openButton: HTMLButtonElement;
   closeButton: HTMLButtonElement;
+  controlButton: HTMLButtonElement;
   dialog: HTMLElement;
   dialogTitle: HTMLElement;
-  modalOpened: boolean;
+  modalCreated: boolean;
+  modalOpen: boolean;
   overlay: HTMLElement;
   interactiveElements: HTMLElement[];
+  buttonMode: string;
 
   constructor(config: ComponentConfig) {
+    console.log(config);
     this.id = config.index;
-    this.openButton = config.element as HTMLButtonElement;
-    const dialogId = this.openButton.getAttribute('aria-controls');
+    if (config.options) {
+      this.buttonMode = config.options.buttonMode || 'open';
+    }
+    this.controlButton = config.element as HTMLButtonElement;
+    const dialogId = this.controlButton.getAttribute('aria-controls');
     this.dialog = document.getElementById(dialogId);
     this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');
     this.interactiveElements = [].slice.call(
@@ -22,13 +34,20 @@ class AnvilModal {
       )
     );
     this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
-    this.modalOpened = false;
-    this.load();
+    this.modalCreated = false;
+    this.bindEvents();
   }
 
-  load() {
-    this.openButton.addEventListener('click', () => this.openModal());
-    this.closeButton.addEventListener('click', () => this.closeModal());
+  bindEvents() {
+    if (this.buttonMode === 'toggle') {
+      console.log('TOGGLE MODE: AFFIRMATIVE 🤖');
+      this.controlButton.addEventListener('click', () => this.toggleModal());
+    } else {
+      console.log('TOGGLE MODE: NEGATIVE 🤖');
+      this.controlButton.addEventListener('click', () => this.openModal());
+      this.closeButton.addEventListener('click', () => this.closeModal());
+    }
+
     this.dialog.addEventListener('keydown', event =>
       this.handleEscape(event as KeyboardEvent)
     );
@@ -50,11 +69,19 @@ class AnvilModal {
       this.closeModalViaOverlay(event)
     );
     this.dialog.hidden = false;
-    this.modalOpened = true;
+    this.modalCreated = true;
+  }
+
+  toggleModal() {
+    if (this.modalOpen) {
+      this.closeModal();
+    } else {
+      this.openModal();
+    }
   }
 
   openModal() {
-    if (!this.modalOpened) {
+    if (!this.modalCreated) {
       this.createModal();
     } else {
       this.overlay.hidden = false;
@@ -63,12 +90,14 @@ class AnvilModal {
     this.dialogTitle.focus();
     this.dialogTitle.tabIndex = -1;
     document.body.classList.add('modal-open');
+    this.modalOpen = true;
   }
 
   closeModal() {
     this.overlay.hidden = true;
-    this.openButton.focus();
+    this.controlButton.focus();
     document.body.classList.remove('modal-open');
+    this.modalOpen = false;
   }
 
   closeModalViaOverlay(event: MouseEvent) {
