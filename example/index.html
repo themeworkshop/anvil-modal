@@ -10,7 +10,12 @@
         selector: 'modal',
         constructor: AnvilModal,
         options: {
-          buttonMode: 'toggle'
+          buttonMode: 'toggle',
+          activeWidths: [
+            {
+              min: 640
+            }
+          ]
         }
       });
       console.log(app);
@@ -68,7 +73,7 @@
 <body>
   <div>
     <button id="open-button" data-component="modal" aria-controls="modal-content">Open</button>
-    <div role="dialog" id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title" class="modal">
+    <div id="modal-content" hidden data-modal="dialog" aria-labelledby="modal-title" class="modal">
       <h1 id="modal-title" data-modal="title" class="modal__title">This is a modal window</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam ipsa ducimus a molestias cum, harum
         veritatis

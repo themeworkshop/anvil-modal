@@ -1,10 +1,11 @@
 import Anvil from '@themeworkshop/anvil';
 import AnvilModal from './anvil-modal';
 
+// NOTE: the modal-container-0 div should be inserted by the script.
 const standardHTML = `
 <body>
   <button id="open-button" data-component="modal" aria-controls="modal-content">Open</button>
-  <div role="dialog" id="modal-content" data-modal="dialog" aria-labelledby="modal-title">
+  <div id="modal-content" data-modal="dialog" aria-labelledby="modal-title">
     <h1 id="modal-title" data-modal="title">This is a modal window</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
       ipsa ducimus a molestias cum, harum veritatis ea illum debitis
