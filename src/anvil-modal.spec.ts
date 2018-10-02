@@ -221,4 +221,120 @@ describe('AnvilModal', () => {
       expect(overlay.hidden).toBe(true);
     });
   });
+
+  describe('When the a width restriction is provided', () => {
+    beforeEach(() => {
+      document.write(toggleHTML);
+    });
+
+    it('an open modal resets on window resize out of range', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle',
+          activeWidths: [
+            {
+              max: 640
+            }
+          ]
+        }
+      });
+
+      // @ts-ignore
+      global.innerWidth = 320;
+      // @ts-ignore
+      global.dispatchEvent(new Event('resize'));
+
+      // Open the modal
+      const toggleButton = document.getElementById('toggle-button');
+      toggleButton.click();
+
+      // Overlay should exist
+      expect(document.getElementById('modal-overlay-0')).toBeInstanceOf(
+        HTMLElement
+      );
+
+      // Simulate a resize
+      // @ts-ignore
+      global.innerWidth = 640;
+      // @ts-ignore
+      global.dispatchEvent(new Event('resize'));
+
+      expect(document.getElementById('modal-overlay-0')).toBeNull();
+      expect(document.getElementById('modal-container-0')).toBeInstanceOf(
+        HTMLElement
+      );
+    });
+
+    it('an open modal does not reset on window resize within range', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle',
+          activeWidths: [
+            {
+              max: 640
+            }
+          ]
+        }
+      });
+
+      // @ts-ignore
+      global.innerWidth = 320;
+      // @ts-ignore
+      global.dispatchEvent(new Event('resize'));
+
+      // Open the modal
+      const toggleButton = document.getElementById('toggle-button');
+      toggleButton.click();
+
+      // Overlay should exist
+      expect(document.getElementById('modal-overlay-0')).toBeInstanceOf(
+        HTMLElement
+      );
+
+      // Simulate a resize
+      // @ts-ignore
+      global.innerWidth = 400;
+      // @ts-ignore
+      global.dispatchEvent(new Event('resize'));
+
+      expect(document.getElementById('modal-overlay-0')).toBeInstanceOf(
+        HTMLElement
+      );
+      expect(document.getElementById('modal-container-0')).toBeInstanceOf(
+        HTMLElement
+      );
+    });
+
+    it('a closed modal does nothing when resized out of range', () => {
+      const anvil = new Anvil();
+      anvil.register({
+        selector: 'modal',
+        constructor: AnvilModal,
+        options: {
+          buttonMode: 'toggle',
+          activeWidths: [
+            {
+              max: 640
+            }
+          ]
+        }
+      });
+
+      // @ts-ignore
+      global.innerWidth = 700;
+      // @ts-ignore
+      global.dispatchEvent(new Event('resize'));
+
+      expect(document.getElementById('modal-overlay-0')).toBeNull();
+      expect(document.getElementById('modal-container-0')).toBeInstanceOf(
+        HTMLElement
+      );
+    });
+  });
 });

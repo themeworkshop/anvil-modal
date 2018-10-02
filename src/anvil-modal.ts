@@ -119,7 +119,9 @@ class AnvilModal {
   }
 
   closeModal() {
-    this.overlay.hidden = true;
+    if (this.overlay) {
+      this.overlay.hidden = true;
+    }
     this.controlButton.focus();
     this.dialog.removeAttribute('role');
     document.body.classList.remove('modal-open');
@@ -128,7 +130,9 @@ class AnvilModal {
 
   resetModal() {
     this.closeModal();
-    this.overlay.parentElement.removeChild(this.overlay);
+    if (this.overlay && this.overlay.parentElement) {
+      this.overlay.parentElement.removeChild(this.overlay);
+    }
     this.dialogContainer.appendChild(this.dialog);
     this.dialog.hidden = this.defaultHidden;
     this.modalCreated = false;
