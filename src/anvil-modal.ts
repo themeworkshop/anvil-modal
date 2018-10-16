@@ -92,7 +92,7 @@ class AnvilModal {
     );
     // Add the toggle button (toggle mode)
     if (this.buttonMode === 'toggle') {
-      this.interactiveElements.push(this.controlButton);
+      this.interactiveElements.unshift(this.controlButton);
     }
     // Add listener to all interactive elements
     this.interactiveElements.forEach(el =>
