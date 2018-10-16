@@ -189,15 +189,23 @@ class AnvilModal {
       event.target as HTMLElement
     );
 
-    if (!event.shiftKey && !this.interactiveElements[currentEl + 1]) {
+    if (!event.shiftKey) {
       event.preventDefault();
-      this.interactiveElements[0].focus();
+      if (this.interactiveElements[currentEl + 1]) {
+        this.interactiveElements[currentEl + 1].focus();
+      } else {
+        this.interactiveElements[0].focus();
+      }
       return;
     }
 
-    if (event.shiftKey && !this.interactiveElements[currentEl - 1]) {
+    if (event.shiftKey) {
       event.preventDefault();
-      this.interactiveElements[this.interactiveElements.length - 1].focus();
+      if (this.interactiveElements[currentEl - 1]) {
+        this.interactiveElements[currentEl - 1].focus();
+      } else {
+        this.interactiveElements[this.interactiveElements.length - 1].focus();
+      }
       return;
     }
   }
