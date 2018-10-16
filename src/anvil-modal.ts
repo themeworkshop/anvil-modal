@@ -37,11 +37,6 @@ class AnvilModal {
     this.dialog = document.getElementById(dialogId);
     this.defaultHidden = this.dialog.hidden;
     this.dialogTitle = this.dialog.querySelector('[data-modal="title"]');
-    this.interactiveElements = [].slice.call(
-      this.dialog.querySelectorAll(
-        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
-      )
-    );
     this.closeButton = this.dialog.querySelector('[data-modal="close-button"]');
     this.modalCreated = false;
     // Wrap dialog in a container
@@ -68,11 +63,6 @@ class AnvilModal {
     this.dialog.addEventListener('keydown', event =>
       this.handleEscape(event as KeyboardEvent)
     );
-    this.interactiveElements.forEach(el =>
-      el.addEventListener('keydown', event =>
-        this.handleTabbing(event as KeyboardEvent)
-      )
-    );
 
     // If active width ranges are provided then set up the resize event handler
     if (this.activeWidths) {
@@ -94,6 +84,22 @@ class AnvilModal {
     );
     this.dialog.hidden = false;
     this.modalCreated = true;
+    // Get all interactive elements
+    this.interactiveElements = [].slice.call(
+      this.dialog.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+      )
+    );
+    // Add the toggle button (toggle mode)
+    if (this.buttonMode === 'toggle') {
+      this.interactiveElements.push(this.controlButton);
+    }
+    // Add listener to all interactive elements
+    this.interactiveElements.forEach(el =>
+      el.addEventListener('keydown', event =>
+        this.handleTabbing(event as KeyboardEvent)
+      )
+    );
   }
 
   toggleModal() {
@@ -136,6 +142,12 @@ class AnvilModal {
     this.dialogContainer.appendChild(this.dialog);
     this.dialog.hidden = this.defaultHidden;
     this.modalCreated = false;
+    // TODO
+    this.interactiveElements.forEach(el =>
+      el.removeEventListener('keydown', event =>
+        this.handleTabbing(event as KeyboardEvent)
+      )
+    );
   }
 
   closeModalViaOverlay(event: MouseEvent) {
