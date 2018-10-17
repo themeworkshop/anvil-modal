@@ -52,6 +52,8 @@ class AnvilModal {
     this.bindEvents();
   }
 
+  tabListener = (event: KeyboardEvent) => this.handleTabbing(event);
+
   bindEvents() {
     if (this.buttonMode === 'toggle') {
       this.controlButton.addEventListener('click', () => this.toggleModal());
@@ -94,12 +96,6 @@ class AnvilModal {
     if (this.buttonMode === 'toggle') {
       this.interactiveElements.unshift(this.controlButton);
     }
-    // Add listener to all interactive elements
-    this.interactiveElements.forEach(el =>
-      el.addEventListener('keydown', event =>
-        this.handleTabbing(event as KeyboardEvent)
-      )
-    );
   }
 
   toggleModal() {
@@ -116,6 +112,11 @@ class AnvilModal {
     } else {
       this.overlay.hidden = false;
     }
+    // Set keyboard trap listeners
+    const thisClass = this;
+    this.interactiveElements.forEach(el =>
+      el.addEventListener('keydown', this.tabListener)
+    );
     this.dialog.setAttribute('role', 'dialog');
     this.dialogTitle.tabIndex = 0;
     this.dialogTitle.focus();
@@ -128,6 +129,10 @@ class AnvilModal {
     if (this.overlay) {
       this.overlay.hidden = true;
     }
+    // Remove keyboard trap
+    this.interactiveElements.forEach(el =>
+      el.removeEventListener('keydown', this.tabListener)
+    );
     this.controlButton.focus();
     this.dialog.removeAttribute('role');
     document.body.classList.remove('modal-open');
@@ -142,12 +147,6 @@ class AnvilModal {
     this.dialogContainer.appendChild(this.dialog);
     this.dialog.hidden = this.defaultHidden;
     this.modalCreated = false;
-    // TODO
-    this.interactiveElements.forEach(el =>
-      el.removeEventListener('keydown', event =>
-        this.handleTabbing(event as KeyboardEvent)
-      )
-    );
   }
 
   closeModalViaOverlay(event: MouseEvent) {
