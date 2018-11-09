@@ -1,6 +1,6 @@
 {
   "name": "@themeworkshop/anvil-modal",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "A modal component for Anvil",
   "main": "dist/anvil-modal",
   "types": "dist/anvil-modal.d.ts",
