@@ -310,31 +310,5 @@ describe('AnvilModal', () => {
         HTMLElement
       );
     });
-
-    it('a closed modal does nothing when resized out of range', () => {
-      const anvil = new Anvil();
-      anvil.register({
-        selector: 'modal',
-        constructor: AnvilModal,
-        options: {
-          buttonMode: 'toggle',
-          activeWidths: [
-            {
-              max: 640
-            }
-          ]
-        }
-      });
-
-      // @ts-ignore
-      global.innerWidth = 700;
-      // @ts-ignore
-      global.dispatchEvent(new Event('resize'));
-
-      expect(document.getElementById('modal-overlay-0')).toBeNull();
-      expect(document.getElementById('modal-container-0')).toBeInstanceOf(
-        HTMLElement
-      );
-    });
   });
 });
